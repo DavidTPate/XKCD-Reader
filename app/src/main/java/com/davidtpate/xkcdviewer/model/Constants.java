@@ -11,6 +11,11 @@ public class Constants {
     public static class Extra {
         public static final String EXTRA_COMIC_NUMBER = "com.davidtpate.xkcdviewer.extras.COMIC_NUMBER";
         public static final String EXTRA_COMIC = "com.davidtpate.xkcdviewer.extras.COMIC";
+        public static final String EXTRA_SYSTEM_UI_VISIBILITY = "com.davidtpate.xkcdviewer.extra.SYSTEM_UI_VISIBILITY";
+    }
+
+    public static class Intent {
+        public static final String BROADCAST_TOGGLE_FULLSCREEN = "com.davidtpate.xkcdviewer.broadcast.TOGGLE_FULLSCREEN";
     }
 
     public static class MagicNumbers {

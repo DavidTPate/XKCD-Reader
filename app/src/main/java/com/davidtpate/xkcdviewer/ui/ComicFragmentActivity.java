@@ -1,8 +1,16 @@
 package com.davidtpate.xkcdviewer.ui;
 
+import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import butterknife.InjectView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -12,27 +20,54 @@ import com.davidtpate.xkcdviewer.adapter.ComicPagerAdapter;
 import com.davidtpate.xkcdviewer.model.Comic;
 import com.davidtpate.xkcdviewer.model.Constants;
 import com.davidtpate.xkcdviewer.preferences.SharedPreferencesHelper;
+import com.davidtpate.xkcdviewer.provider.SystemUiStateProvider;
 import com.davidtpate.xkcdviewer.ui.base.BaseFragmentActivity;
 import com.davidtpate.xkcdviewer.ui.dialog.JumpToDialogFragment;
+import com.davidtpate.xkcdviewer.util.AndroidUtil;
 import com.davidtpate.xkcdviewer.util.Ln;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 
-public class ComicFragmentActivity extends BaseFragmentActivity implements
-    JumpToDialogFragment.JumpToDialogListener {
+public class ComicFragmentActivity extends BaseFragmentActivity
+    implements JumpToDialogFragment.JumpToDialogListener, SystemUiStateProvider {
     protected ComicPagerAdapter mAdapter;
     @InjectView(R.id.vp_pager)
     protected ViewPager mPager;
+    protected int mMaxComics = Constants.LATEST_COMIC_NUMBER;
+
+    protected View.OnSystemUiVisibilityChangeListener mOnSystemUiVisibilityChangeListener;
+    protected BroadcastReceiver mToggleFullscreenReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isSystemUiVisible =
+                intent.getBooleanExtra(Constants.Extra.EXTRA_SYSTEM_UI_VISIBILITY, false);
+            if (mPager != null) {
+                if (isSystemUiVisible) {
+                    goFullscreen();
+                } else {
+                    exitFullscreen();
+                }
+            }
+        }
+    };
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comic_fragment_activity);
         initializeAdapter();
+        initializeViewPager();
         initializeActionBar();
         moveViewPagerToRequestedIndex();
+        registerLocalBroadcastReceivers();
 
         GetCurrentComicTask getCurrentComicTask = new GetCurrentComicTask();
         getCurrentComicTask.execute((Void) null);
+    }
+
+    @Override protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mToggleFullscreenReceiver);
+        super.onDestroy();
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,11 +88,35 @@ public class ComicFragmentActivity extends BaseFragmentActivity implements
         }
     }
 
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.Extra.EXTRA_COMIC_NUMBER, mMaxComics);
+    }
+
+    @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMaxComics = savedInstanceState.getInt(Constants.Extra.EXTRA_COMIC_NUMBER,
+            Constants.LATEST_COMIC_NUMBER);
+    }
+
+    protected void registerLocalBroadcastReceivers() {
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(mToggleFullscreenReceiver,
+                new IntentFilter(Constants.Intent.BROADCAST_TOGGLE_FULLSCREEN));
+    }
+
     protected void initializeAdapter() {
-        mAdapter = new ComicPagerAdapter(getSupportFragmentManager(),
-            SharedPreferencesHelper.getMaxComics(this));
+        mMaxComics = SharedPreferencesHelper.getMaxComics(this);
+        mAdapter = new ComicPagerAdapter(getSupportFragmentManager(), mMaxComics);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB) protected void initializeViewPager() {
         mPager.setAdapter(mAdapter);
         mPager.setOffscreenPageLimit(Constants.MagicNumbers.MAX_COMIC_OFFSCREEN_LIMIT);
+        // Hide and show the ActionBar as the visibility changes
+        if (AndroidUtil.hasHoneycomb()) {
+            mPager.setOnSystemUiVisibilityChangeListener(getSystemUiVisibilityChangeListener());
+        }
     }
 
     protected void initializeActionBar() {
@@ -76,9 +135,55 @@ public class ComicFragmentActivity extends BaseFragmentActivity implements
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    protected View.OnSystemUiVisibilityChangeListener getSystemUiVisibilityChangeListener() {
+        if (mOnSystemUiVisibilityChangeListener == null) {
+            mOnSystemUiVisibilityChangeListener = new View.OnSystemUiVisibilityChangeListener() {
+
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    if ((visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
+                        getSupportActionBar().hide();
+                    } else {
+                        getSupportActionBar().show();
+                    }
+                }
+            };
+        }
+        return mOnSystemUiVisibilityChangeListener;
+    }
+
     @Override public void onJumpTo(int jumpToValue) {
         //The comic is 1 based while arrays are 0 based, so decrement to make it place properly.
         mPager.setCurrentItem(jumpToValue - 1);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB) protected void goFullscreen() {
+        if (AndroidUtil.hasHoneycomb()) {
+            mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        } else {
+            getSupportActionBar().hide();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB) protected void exitFullscreen() {
+        if (AndroidUtil.hasHoneycomb()) {
+            mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        } else {
+            getSupportActionBar().show();
+        }
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB) public boolean isSystemUiVisible() {
+        if (AndroidUtil.hasHoneycomb()) {
+            final int vis = mPager.getSystemUiVisibility();
+            if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) return false;
+        } else {
+            return getSupportActionBar().isShowing();
+        }
+
+        return true;
     }
 
     private class GetCurrentComicTask extends AsyncTask<Void, Void, Comic> {
@@ -127,7 +232,8 @@ public class ComicFragmentActivity extends BaseFragmentActivity implements
             super.onPostExecute(comic);
             if (comic != null) {
                 Ln.d("Got Max Comic Number: %d", comic.getNumber());
-                SharedPreferencesHelper.setMaxComics(ComicFragmentActivity.this, comic.getNumber());
+                mMaxComics = comic.getNumber();
+                SharedPreferencesHelper.setMaxComics(ComicFragmentActivity.this, mMaxComics);
                 mAdapter.updateMaxComicNumber(comic.getNumber());
             }
         }

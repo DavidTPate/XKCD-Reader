@@ -1,38 +1,78 @@
 package com.davidtpate.xkcdviewer.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.davidtpate.xkcdviewer.R;
 import com.davidtpate.xkcdviewer.model.Comic;
 import com.davidtpate.xkcdviewer.model.Constants;
+import com.davidtpate.xkcdviewer.provider.SystemUiStateProvider;
 import com.davidtpate.xkcdviewer.ui.base.BaseFragment;
 import com.davidtpate.xkcdviewer.util.ComicUtil;
+import com.davidtpate.xkcdviewer.util.Ln;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 public class ComicFragment extends BaseFragment {
+    @InjectView(R.id.ll_comic_information) LinearLayout mComicInformation;
     @InjectView(R.id.tv_title) TextView mTitle;
     @InjectView(R.id.tv_subtitle) TextView mSubTitle;
     @InjectView(R.id.tv_comic_details) TextView mComicDetails;
-    @InjectView(R.id.iv_comic) ImageView mComicImage;
+    @InjectView(R.id.iv_comic) PhotoView mComicImage;
 
+    protected int mActionBarHeight;
     protected int mComicNumber = Constants.LATEST_COMIC_NUMBER;
     protected Comic mComic = null;
+    protected SystemUiStateProvider mSystemUiStateProvider;
+
+    protected BroadcastReceiver mToggleFullscreenReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isSystemUiVisible =
+                intent.getBooleanExtra(Constants.Extra.EXTRA_SYSTEM_UI_VISIBILITY, false);
+            if (isSystemUiVisible) {
+                goFullscreen();
+            } else {
+                exitFullscreen();
+            }
+        }
+    };
+
+    protected PhotoViewAttacher.OnPhotoTapListener mPhotoTapListener =
+        new PhotoViewAttacher.OnPhotoTapListener() {
+
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                Intent intent = new Intent(Constants.Intent.BROADCAST_TOGGLE_FULLSCREEN);
+                intent.putExtra(Constants.Extra.EXTRA_SYSTEM_UI_VISIBILITY,
+                    mSystemUiStateProvider.isSystemUiVisible());
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+            }
+        };
 
     /**
      * Factory method to generate a new instance of the fragment given a comic number.
      *
-     * @param comicNumber
-     *            The number representing the comic to load
+     * @param comicNumber The number representing the comic to load
      * @return A new instance of ComicFragment with extras
      */
     public static ComicFragment newInstance(int comicNumber) {
@@ -53,6 +93,21 @@ public class ComicFragment extends BaseFragment {
     }
 
     /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override public void onResume() {
+        super.onResume();
+        if (mSystemUiStateProvider.isSystemUiVisible()) {
+            exitFullscreen();
+        } else {
+            goFullscreen();
+        }
+    }
+
+    /**
      * Called when the fragment's activity has been created and this
      * fragment's view hierarchy instantiated.  It can be used to do final
      * initialization once these pieces are in place, such as retrieving
@@ -68,6 +123,25 @@ public class ComicFragment extends BaseFragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadSavedInstanceState(savedInstanceState);
+
+        try {
+            mSystemUiStateProvider = (SystemUiStateProvider) getActivity();
+        } catch (ClassCastException e) {
+            Ln.e(e, "The parent activity must implement the SystemUiStateProvider interface");
+        }
+
+        // Calculate ActionBar height
+        TypedValue tv = new TypedValue();
+        if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
+            mActionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+                getActivity().getResources().getDisplayMetrics());
+        }
+
+        LocalBroadcastManager.getInstance(getActivity())
+            .registerReceiver(mToggleFullscreenReceiver,
+                new IntentFilter(Constants.Intent.BROADCAST_TOGGLE_FULLSCREEN));
+
+        mComicImage.setOnPhotoTapListener(mPhotoTapListener);
     }
 
     /**
@@ -106,7 +180,7 @@ public class ComicFragment extends BaseFragment {
      * android.os.Bundle)}, and
      * {@link #onActivityCreated(android.os.Bundle)}.
      *
-     * <p>This corresponds to {@link Activity#onSaveInstanceState(android.os.Bundle)
+     * <p>This corresponds to {@link android.app.Activity#onSaveInstanceState(android.os.Bundle)
      * Activity.onSaveInstanceState(Bundle)} and most of the discussion there
      * applies here as well.  Note however: <em>this method may be called
      * at any time before {@link #onDestroy()}</em>.  There are many situations
@@ -126,16 +200,40 @@ public class ComicFragment extends BaseFragment {
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity())
+            .unregisterReceiver(mToggleFullscreenReceiver);
+        super.onDestroy();
+    }
+
     protected void loadSavedInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(Constants.Extra.EXTRA_COMIC_NUMBER)) {
-                mComicNumber = savedInstanceState.getInt(Constants.Extra.EXTRA_COMIC_NUMBER);
-            }
+            mComicNumber = savedInstanceState.getInt(Constants.Extra.EXTRA_COMIC_NUMBER,
+                Constants.LATEST_COMIC_NUMBER);
 
             if (savedInstanceState.containsKey(Constants.Extra.EXTRA_COMIC)) {
                 mComic = savedInstanceState.getParcelable(Constants.Extra.EXTRA_COMIC);
             }
         }
+    }
+
+    protected void goFullscreen() {
+        animate(mComicInformation).setDuration(500).y(-400);
+        mComicInformation.postDelayed(new Runnable() {
+            @Override public void run() {
+                mComicInformation.setVisibility(View.GONE);
+            }
+        }, 600);
+
+    }
+
+    protected void exitFullscreen() {
+        mComicInformation.setVisibility(View.VISIBLE);
+        animate(mComicInformation).setDuration(500).y(mActionBarHeight);
     }
 
     private class ResolveComicTask extends AsyncTask<Integer, Void, Comic> {
@@ -191,11 +289,14 @@ public class ComicFragment extends BaseFragment {
                 mTitle.setText(comic.getTitle() + " (#" + comic.getNumber() + ")");
                 mSubTitle.setText(comic.getSubTitle());
                 Calendar cal = Calendar.getInstance();
-                cal.set(Integer.valueOf(comic.getYear()), Integer.valueOf(comic.getMonth()), Integer.valueOf(comic.getDay()));
+                cal.set(Integer.valueOf(comic.getYear()), Integer.valueOf(comic.getMonth()),
+                    Integer.valueOf(comic.getDay()));
                 SimpleDateFormat dateFormat = new SimpleDateFormat("'Posted: 'EEE, MMM dd yyyy");
                 mComicDetails.setText(dateFormat.format(cal.getTime()));
-                Picasso.with(getActivity()).load(comic.getImageUrl()).placeholder(R.drawable.loading_spinner_76).into(
-                    mComicImage);
+                Picasso.with(getActivity())
+                    .load(comic.getImageUrl())
+                    .placeholder(R.drawable.loading_spinner_76)
+                    .into(mComicImage);
             }
         }
     }
