@@ -3,7 +3,6 @@ package com.davidtpate.xkcdviewer;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
-import com.davidtpate.xkcdviewer.module.RootModule;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import static android.os.Build.VERSION.SDK_INT;
@@ -57,12 +56,6 @@ public class BaseApplication extends Application {
         super.onCreate();
 
         instance = this;
-
-        // Perform injection
-        Injector.init(getRootModule(), this);
     }
 
-    private Object getRootModule() {
-        return new RootModule();
-    }
 }

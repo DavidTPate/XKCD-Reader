@@ -10,7 +10,6 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.davidtpate.xkcdviewer.Injector;
 import com.davidtpate.xkcdviewer.R;
 import java.util.List;
 
@@ -33,7 +32,6 @@ public abstract class BaseListFragment<E> extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        Injector.inject(this);
     }
 
     public void showProgressBar() {

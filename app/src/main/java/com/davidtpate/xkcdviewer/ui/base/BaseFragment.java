@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.davidtpate.xkcdviewer.Injector;
 
 /**
  * Base class for all non-specialized Fragments.
@@ -14,7 +13,6 @@ public abstract class BaseFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        Injector.inject(this);
     }
 
     public void showProgressBar() {
