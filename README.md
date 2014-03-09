@@ -12,18 +12,27 @@
 ## Technologies
 
 ### Client-Side
-* [Menu Drawer](https://github.com/SimonVT/android-menudrawer)
-* [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
-* [Picasso](https://github.com/square/picasso)
-* [Butterknife](https://github.com/JakeWharton/butterknife)
-* [Dagger](https://github.com/square/dagger/)
-* [Otto](https://github.com/square/otto)
-* [Photo View](https://github.com/chrisbanes/PhotoView)
+#### [Google Gson](https://code.google.com/p/google-gson/)
+Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
+#### [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
+Action bar implementation which uses the native action bar on Android 4.0+ and a custom implementation on pre-4.0 through a single API and theme.
+#### [Butterknife](https://github.com/JakeWharton/butterknife)
+View "injection" library for Android.
+#### [Picasso](https://github.com/square/picasso)
+A powerful image downloading and caching library for Android.
+#### [Http-Request](https://github.com/kevinsawicki/http-request)
+A simple convenience library for using a HttpURLConnection to make requests and access the response.
+#### [NineOldAndroids](https://github.com/JakeWharton/NineOldAndroids/)
+Android library for using the Honeycomb animation API on all versions of the platform back to 1.0!
+#### [Photo View](https://github.com/chrisbanes/PhotoView)
+Implementation of ImageView for Android that supports zooming, by various touch gestures.
 
 ### APIs
 * [XKCD API](http://xkcd.com/json.html)
 
 ### Media
+#### [XKCD](http://www.xkcd.com)
+Comics used are licensed under [Creative Commons Attribution-NonCommercial 2.5 License](http://creativecommons.org/licenses/by-nc/2.5/) from [XKCD](http://www.xkcd.com).
 
 ## Issues and Feature Requests
 Please see the [issues](https://github.com/DavidTPate/XKCD-Viewer/issues) section
