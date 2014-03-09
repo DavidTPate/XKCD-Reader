@@ -25,11 +25,14 @@ import com.davidtpate.xkcdviewer.ui.base.BaseFragmentActivity;
 import com.davidtpate.xkcdviewer.ui.dialog.JumpToDialogFragment;
 import com.davidtpate.xkcdviewer.util.AndroidUtil;
 import com.davidtpate.xkcdviewer.util.Ln;
+import com.davidtpate.xkcdviewer.util.MathUtil;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 
 public class ComicFragmentActivity extends BaseFragmentActivity
     implements JumpToDialogFragment.JumpToDialogListener, SystemUiStateProvider {
+    protected MenuItem mExpandMenuItem;
+    protected MenuItem mCollapseMenuItem;
     protected ComicPagerAdapter mAdapter;
     @InjectView(R.id.vp_pager)
     protected ViewPager mPager;
@@ -76,12 +79,35 @@ public class ComicFragmentActivity extends BaseFragmentActivity
         return true;
     }
 
+    @Override public boolean onPrepareOptionsMenu(Menu menu) {
+        mExpandMenuItem = menu.findItem(R.id.menu_expand);
+        mCollapseMenuItem = menu.findItem(R.id.menu_collapse);
+        updateMenuView();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_jump_to:
                 //Show dialog fragment to get number.
                 JumpToDialogFragment jumpToDialogFragment = JumpToDialogFragment.newInstance();
                 jumpToDialogFragment.show(getSupportFragmentManager(), "JumpTo");
+                return true;
+            case R.id.menu_expand:
+                Intent expandIntent = new Intent(Constants.Intent.BROADCAST_TOGGLE_FULLSCREEN);
+                expandIntent.putExtra(Constants.Extra.EXTRA_SYSTEM_UI_VISIBILITY,
+                    isSystemUiVisible());
+                LocalBroadcastManager.getInstance(this).sendBroadcast(expandIntent);
+                return true;
+            case R.id.menu_collapse:
+                Intent collapseIntent = new Intent(Constants.Intent.BROADCAST_TOGGLE_FULLSCREEN);
+                collapseIntent.putExtra(Constants.Extra.EXTRA_SYSTEM_UI_VISIBILITY, isSystemUiVisible());
+                LocalBroadcastManager.getInstance(this).sendBroadcast(collapseIntent);
+                return true;
+            case R.id.menu_random:
+                if (mPager != null) {
+                    mPager.setCurrentItem(MathUtil.randInt(1, SharedPreferencesHelper.getMaxComics(this)));
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -135,6 +161,18 @@ public class ComicFragmentActivity extends BaseFragmentActivity
         }
     }
 
+    protected void updateMenuView() {
+        if (mExpandMenuItem != null && mCollapseMenuItem != null) {
+            if (isSystemUiVisible()) {
+                mExpandMenuItem.setVisible(true);
+                mCollapseMenuItem.setVisible(false);
+            } else {
+                mExpandMenuItem.setVisible(false);
+                mCollapseMenuItem.setVisible(true);
+            }
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected View.OnSystemUiVisibilityChangeListener getSystemUiVisibilityChangeListener() {
         if (mOnSystemUiVisibilityChangeListener == null) {
@@ -164,6 +202,7 @@ public class ComicFragmentActivity extends BaseFragmentActivity
         } else {
             getSupportActionBar().hide();
         }
+        updateMenuView();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB) protected void exitFullscreen() {
@@ -172,6 +211,7 @@ public class ComicFragmentActivity extends BaseFragmentActivity
         } else {
             getSupportActionBar().show();
         }
+        updateMenuView();
     }
 
     @Override
@@ -234,7 +274,8 @@ public class ComicFragmentActivity extends BaseFragmentActivity
                 Ln.d("Got Max Comic Number: %d", comic.getNumber());
                 mMaxComics = comic.getNumber();
                 SharedPreferencesHelper.setMaxComics(ComicFragmentActivity.this, mMaxComics);
-                mAdapter.updateMaxComicNumber(comic.getNumber());
+                mAdapter.updateMaxComicNumber(mMaxComics);
+                mPager.setCurrentItem(mMaxComics);
             }
         }
     }

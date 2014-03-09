@@ -95,7 +95,7 @@ public class ComicFragment extends BaseFragment {
     /**
      * Called when the fragment is visible to the user and actively running.
      * This is generally
-     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * tied to {@link android.app.Activity#onResume() Activity.onResume} of the containing
      * Activity's lifecycle.
      */
     @Override public void onResume() {

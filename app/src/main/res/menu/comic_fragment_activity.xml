@@ -2,5 +2,27 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_jump_to"
-        android:title="Jump To"/>
+        android:title="@string/jump_to"
+        android:icon="@drawable/ic_action_import"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/menu_expand"
+        android:title="@string/expand"
+        android:icon="@drawable/ic_action_expand"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/menu_collapse"
+        android:title="@string/collapse"
+        android:icon="@drawable/ic_action_collapse"
+        android:showAsAction="always"/>
+
+    <item android:id="@+id/menu_random"
+        android:title="@string/random"
+        android:icon="@drawable/ic_action_import"
+        android:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/menu_about"
+        android:title="@string/about"
+        android:icon="@drawable/ic_action_info"
+        android:showAsAction="ifRoom"/>
 </menu>
