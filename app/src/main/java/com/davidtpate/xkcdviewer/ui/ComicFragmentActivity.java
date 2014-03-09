@@ -109,6 +109,9 @@ public class ComicFragmentActivity extends BaseFragmentActivity
                     mPager.setCurrentItem(MathUtil.randInt(1, SharedPreferencesHelper.getMaxComics(this)));
                 }
                 return true;
+            case R.id.menu_about:
+                Intent aboutIntent = new Intent(this, About.class);
+                startActivity(aboutIntent);
             default:
                 return super.onOptionsItemSelected(item);
         }

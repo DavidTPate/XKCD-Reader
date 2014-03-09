@@ -27,6 +27,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.About"
+            android:label="@string/about" />
+
     </application>
 
 </manifest>
