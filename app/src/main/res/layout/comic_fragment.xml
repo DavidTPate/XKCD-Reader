@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/ll_comic_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_subtitle"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_comic_details"/>
+
+
+    </LinearLayout>
+
+    <uk.co.senab.photoview.PhotoView
+        android:id="@+id/iv_comic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="It's a comic!"
+        android:focusableInTouchMode="true"
+        android:layout_below="@id/ll_comic_information"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
