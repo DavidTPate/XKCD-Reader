@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.model;
+package com.davidtpate.xkcd.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.ui.dialog;
+package com.davidtpate.xkcd.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,8 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.davidtpate.xkcdviewer.R;
-import com.davidtpate.xkcdviewer.util.Strings;
+import com.davidtpate.xkcd.R;
+import com.davidtpate.xkcd.util.Strings;
 
 public class JumpToDialogFragment extends DialogFragment implements
     TextView.OnEditorActionListener {

@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.ui;
+package com.davidtpate.xkcd.ui;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -15,17 +15,17 @@ import butterknife.InjectView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.davidtpate.xkcdviewer.R;
-import com.davidtpate.xkcdviewer.adapter.ComicPagerAdapter;
-import com.davidtpate.xkcdviewer.model.Comic;
-import com.davidtpate.xkcdviewer.model.Constants;
-import com.davidtpate.xkcdviewer.preferences.SharedPreferencesHelper;
-import com.davidtpate.xkcdviewer.provider.SystemUiStateProvider;
-import com.davidtpate.xkcdviewer.ui.base.BaseFragmentActivity;
-import com.davidtpate.xkcdviewer.ui.dialog.JumpToDialogFragment;
-import com.davidtpate.xkcdviewer.util.AndroidUtil;
-import com.davidtpate.xkcdviewer.util.Ln;
-import com.davidtpate.xkcdviewer.util.MathUtil;
+import com.davidtpate.xkcd.R;
+import com.davidtpate.xkcd.adapter.ComicPagerAdapter;
+import com.davidtpate.xkcd.model.Comic;
+import com.davidtpate.xkcd.model.Constants;
+import com.davidtpate.xkcd.preferences.SharedPreferencesHelper;
+import com.davidtpate.xkcd.provider.SystemUiStateProvider;
+import com.davidtpate.xkcd.ui.base.BaseFragmentActivity;
+import com.davidtpate.xkcd.ui.dialog.JumpToDialogFragment;
+import com.davidtpate.xkcd.util.AndroidUtil;
+import com.davidtpate.xkcd.util.Ln;
+import com.davidtpate.xkcd.util.MathUtil;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 

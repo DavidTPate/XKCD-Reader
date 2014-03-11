@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.ui;
+package com.davidtpate.xkcd.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,13 +14,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.InjectView;
-import com.davidtpate.xkcdviewer.R;
-import com.davidtpate.xkcdviewer.model.Comic;
-import com.davidtpate.xkcdviewer.model.Constants;
-import com.davidtpate.xkcdviewer.provider.SystemUiStateProvider;
-import com.davidtpate.xkcdviewer.ui.base.BaseFragment;
-import com.davidtpate.xkcdviewer.util.ComicUtil;
-import com.davidtpate.xkcdviewer.util.Ln;
+import com.davidtpate.xkcd.R;
+import com.davidtpate.xkcd.model.Comic;
+import com.davidtpate.xkcd.model.Constants;
+import com.davidtpate.xkcd.provider.SystemUiStateProvider;
+import com.davidtpate.xkcd.ui.base.BaseFragment;
+import com.davidtpate.xkcd.util.ComicUtil;
+import com.davidtpate.xkcd.util.Ln;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;

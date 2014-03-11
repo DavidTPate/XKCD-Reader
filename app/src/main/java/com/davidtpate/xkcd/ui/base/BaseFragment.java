@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.ui.base;
+package com.davidtpate.xkcd.ui.base;
 
 import android.os.Bundle;
 import android.view.View;

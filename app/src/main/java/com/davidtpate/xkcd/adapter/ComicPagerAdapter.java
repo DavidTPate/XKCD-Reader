@@ -1,11 +1,11 @@
-package com.davidtpate.xkcdviewer.adapter;
+package com.davidtpate.xkcd.adapter;
 
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import com.davidtpate.xkcdviewer.model.Constants;
-import com.davidtpate.xkcdviewer.ui.ComicFragment;
-import com.davidtpate.xkcdviewer.util.Ln;
+import com.davidtpate.xkcd.model.Constants;
+import com.davidtpate.xkcd.ui.ComicFragment;
+import com.davidtpate.xkcd.util.Ln;
 
 /**
  * The main adapter that backs the ViewPager. A subclass of FragmentStatePagerAdapter as there

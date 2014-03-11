@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.preferences;
+package com.davidtpate.xkcd.preferences;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import com.davidtpate.xkcdviewer.model.Constants;
-import com.davidtpate.xkcdviewer.util.AndroidUtil;
+import com.davidtpate.xkcd.model.Constants;
+import com.davidtpate.xkcd.util.AndroidUtil;
 import java.util.ArrayList;
 import java.util.List;
 

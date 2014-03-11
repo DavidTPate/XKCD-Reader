@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.ui.base;
+package com.davidtpate.xkcd.ui.base;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import butterknife.ButterKnife;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.android.debug.hv.ViewServer;
-import com.davidtpate.xkcdviewer.BuildConfig;
-import com.davidtpate.xkcdviewer.ui.ComicFragmentActivity;
+import com.davidtpate.xkcd.BuildConfig;
+import com.davidtpate.xkcd.ui.ComicFragmentActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;

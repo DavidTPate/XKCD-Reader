@@ -1,13 +1,13 @@
-package com.davidtpate.xkcdviewer.ui;
+package com.davidtpate.xkcd.ui;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.InjectView;
-import com.davidtpate.xkcdviewer.R;
-import com.davidtpate.xkcdviewer.model.Comic;
-import com.davidtpate.xkcdviewer.ui.base.BaseActivity;
+import com.davidtpate.xkcd.R;
+import com.davidtpate.xkcd.model.Comic;
+import com.davidtpate.xkcd.ui.base.BaseActivity;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;

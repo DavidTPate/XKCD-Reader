@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.util;
+package com.davidtpate.xkcd.util;
 
 import java.io.IOException;
 import java.io.InputStream;

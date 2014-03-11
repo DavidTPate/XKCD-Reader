@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.provider;
+package com.davidtpate.xkcd.provider;
 
 /**
  * Used to determine whether we are in fullscreen or windowed mode

@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.ui.base;
+package com.davidtpate.xkcd.ui.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.davidtpate.xkcdviewer.R;
+import com.davidtpate.xkcd.R;
 import java.util.List;
 
 public abstract class BaseListFragment<E> extends SherlockListFragment {

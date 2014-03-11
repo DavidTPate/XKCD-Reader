@@ -1,6 +1,6 @@
-package com.davidtpate.xkcdviewer.util;
+package com.davidtpate.xkcd.util;
 
-import com.davidtpate.xkcdviewer.model.Constants;
+import com.davidtpate.xkcd.model.Constants;
 
 /**
  * General Util class for XKCD comics.

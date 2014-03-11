@@ -1,10 +1,10 @@
-package com.davidtpate.xkcdviewer.util;
+package com.davidtpate.xkcd.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
-import com.davidtpate.xkcdviewer.ui.ComicFragmentActivity;
+import com.davidtpate.xkcd.ui.ComicFragmentActivity;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Method;

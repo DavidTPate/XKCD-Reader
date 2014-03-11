@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer.model;
+package com.davidtpate.xkcd.model;
 
 public class Constants {
     public static final int LATEST_COMIC_NUMBER = -42;

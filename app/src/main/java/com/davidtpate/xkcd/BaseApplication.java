@@ -1,4 +1,4 @@
-package com.davidtpate.xkcdviewer;
+package com.davidtpate.xkcd;
 
 import android.app.Application;
 import android.app.Instrumentation;

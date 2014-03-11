@@ -1,9 +1,9 @@
-package com.davidtpate.xkcdviewer.ui;
+package com.davidtpate.xkcd.ui;
 
 import android.os.Bundle;
 import com.actionbarsherlock.view.MenuItem;
-import com.davidtpate.xkcdviewer.R;
-import com.davidtpate.xkcdviewer.ui.base.BaseActivity;
+import com.davidtpate.xkcd.R;
+import com.davidtpate.xkcd.ui.base.BaseActivity;
 
 public class About extends BaseActivity {
 
