@@ -31,6 +31,12 @@ android {
             keyPassword "PASSWORD_GOES_HERE"
         }
     }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.prod
+        }
+    }
 }
 
 repositories {
