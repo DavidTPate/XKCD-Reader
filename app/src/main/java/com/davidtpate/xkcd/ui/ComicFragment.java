@@ -284,7 +284,7 @@ public class ComicFragment extends BaseFragment {
          */
         @Override protected void onPostExecute(Comic comic) {
             super.onPostExecute(comic);
-            if (comic != null) {
+            if (comic != null && mTitle != null) {
                 mComic = comic;
                 mTitle.setText(comic.getTitle() + " (#" + comic.getNumber() + ")");
                 mSubTitle.setText(comic.getSubTitle());
